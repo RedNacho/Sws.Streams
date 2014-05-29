@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{3F4470DA-CB18-48FE-A52D-7FF00B8D6013}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Sws.Streams.Core</RootNamespace>
+    <AssemblyName>Sws.Streams.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Adapters\AdapterFactory.cs" />
+    <Compile Include="Adapters\RewindableStream.cs" />
+    <Compile Include="Adapters\RollingMemoryStream.cs" />
+    <Compile Include="Adapters\StreamWrapperBase.cs" />
+    <Compile Include="Common\AbstractStreamImplementations\NonSeekableReadOnlyStream.cs" />
+    <Compile Include="Common\AbstractStreamImplementations\NonSeekableStream.cs" />
+    <Compile Include="Common\AbstractStreamImplementations\NonSeekableWriteOnlyStream.cs" />
+    <Compile Include="Common\Internal\ExceptionMessages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ExceptionMessages.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Common\Internal\IInterruptibleRepeater.cs" />
+    <Compile Include="Common\Internal\InterruptibleRepeater.cs" />
+    <Compile Include="Common\Internal\IRepeatingTask.cs" />
+    <Compile Include="Common\Internal\RepeatingTaskResult.cs" />
+    <Compile Include="Forwarding\Internal\StreamForwarderRepeatingTask.cs" />
+    <Compile Include="Forwarding\IStreamAvailabilityChecker.cs" />
+    <Compile Include="Forwarding\IStreamCompletionChecker.cs" />
+    <Compile Include="Common\IExceptionHandler.cs" />
+    <Compile Include="Forwarding\Internal\StreamForwarder.cs" />
+    <Compile Include="Forwarding\IStreamForwarder.cs" />
+    <Compile Include="Common\IThreadPauser.cs" />
+    <Compile Include="Forwarding\StreamForwarderBuilder.cs" />
+    <Compile Include="Common\ThreadPauser.cs" />
+    <Compile Include="FrameDropping\FrameDescription.cs" />
+    <Compile Include="FrameDropping\FrameDroppingStreamBuilder.cs" />
+    <Compile Include="FrameDropping\FrameSearchResult.cs" />
+    <Compile Include="FrameDropping\IFrameFinder.cs" />
+    <Compile Include="FrameDropping\Internal\FrameDroppingStream.cs" />
+    <Compile Include="FrameDropping\Internal\RewindablePositionRecorder.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Recording\Internal\IPlaybackState.cs" />
+    <Compile Include="Recording\Internal\PlaybackStream.cs" />
+    <Compile Include="Recording\Internal\ReadingDataPlaybackState.cs" />
+    <Compile Include="Recording\Internal\ReadingLengthPlaybackState.cs" />
+    <Compile Include="Recording\Internal\ReadingTimeOffsetPlaybackState.cs" />
+    <Compile Include="Recording\Internal\RecordingStream.cs" />
+    <Compile Include="Recording\PlaybackStreamBuilder.cs" />
+    <Compile Include="Recording\RecordingStreamBuilder.cs" />
+    <Compile Include="Rewinding\ICacheAccessor.cs" />
+    <Compile Include="Rewinding\Internal\RewindableStream.cs" />
+    <Compile Include="Rewinding\Internal\Rewindable.cs" />
+    <Compile Include="Rewinding\MemoryStreamBased\MemoryStreamCacheAccessor.cs" />
+    <Compile Include="Rewinding\IRewindable.cs" />
+    <Compile Include="Rewinding\PositionChangedEventArgs.cs" />
+    <Compile Include="Rewinding\PositionChangedEventHandler.cs" />
+    <Compile Include="Rewinding\RewindableBuilder.cs" />
+    <Compile Include="Common\CurrentDateTimeSource.cs" />
+    <Compile Include="Rolling\Internal\CompletedReadStreamHandler.cs" />
+    <Compile Include="Rolling\Internal\DataSourceDisposerRegister.cs" />
+    <Compile Include="Rolling\Internal\ICompletedWriteStreamSource.cs" />
+    <Compile Include="Rolling\Internal\IActiveWriteStreamSource.cs" />
+    <Compile Include="Rolling\Internal\IDataSourceDisposerRegister.cs" />
+    <Compile Include="Rolling\Internal\IReadStreamQueueRefresher.cs" />
+    <Compile Include="Rolling\Internal\ReadStreamDefinition.cs" />
+    <Compile Include="Rolling\Internal\RollingMemory.cs" />
+    <Compile Include="Common\ICurrentDateTimeSource.cs" />
+    <Compile Include="Rolling\Internal\IWriteStreamLengthValidator.cs" />
+    <Compile Include="Rolling\Internal\ICompletedReadStreamHandler.cs" />
+    <Compile Include="Rolling\Internal\ICompletedWriteStreamHandler.cs" />
+    <Compile Include="Rolling\Internal\IReadStreamQueueSource.cs" />
+    <Compile Include="Rolling\Internal\IReadStreamQueueTarget.cs" />
+    <Compile Include="Rolling\Internal\ReadStreamQueue.cs" />
+    <Compile Include="Rolling\Internal\ReadStreamQueueRefresher.cs" />
+    <Compile Include="Rolling\Internal\RollingMemoryReadStream.cs" />
+    <Compile Include="Rolling\Internal\RollingMemoryWriteStream.cs" />
+    <Compile Include="Rolling\Internal\CompletedWriteStreamBuffer.cs" />
+    <Compile Include="Rolling\IRollingMemoryStateMonitor.cs" />
+    <Compile Include="Rolling\MemoryStreamBased\MemoryStreamStreamDataSourceDisposerFactory.cs" />
+    <Compile Include="Rolling\MemoryStreamBased\MemoryStreamWriteStreamFactory.cs" />
+    <Compile Include="Rolling\MemoryStreamBased\MemoryStreamWriteStreamToReadStreamConverter.cs" />
+    <Compile Include="Rolling\RollingMemoryBuilder.cs" />
+    <Compile Include="Rolling\IStreamDataSourceDisposerFactory.cs" />
+    <Compile Include="Rolling\IRollingMemory.cs" />
+    <Compile Include="Rolling\IDataSourceDisposer.cs" />
+    <Compile Include="Rolling\IWriteStreamFactory.cs" />
+    <Compile Include="Rolling\IWriteStreamToReadStreamConverter.cs" />
+    <Compile Include="Splitting\Internal\SplitStream.cs" />
+    <Compile Include="Splitting\ISplitStreamExceptionHandler.cs" />
+    <Compile Include="Splitting\SplitStreamBuilder.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Common\Internal\ExceptionMessages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ExceptionMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
