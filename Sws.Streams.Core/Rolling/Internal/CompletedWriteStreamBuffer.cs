@@ -74,13 +74,17 @@ namespace Sws.Streams.Core.Rolling.Internal
 
         public void FlushAllCompletedWriteStreamsToReadStreamQueue()
         {
-            while (CompletedWriteStreamQueue.Count > 0)
+            int queueCount;
+
+            do
             {
                 lock (CompletedWriteStreamQueueSyncObject)
                 {
                     FlushNextCompletedWriteStreamToReadStreamQueue();
+                    queueCount = CompletedWriteStreamQueue.Count;
                 }
             }
+            while (queueCount > 0);
         }
         
         public long RequestAvailableLength(long idealLength)
