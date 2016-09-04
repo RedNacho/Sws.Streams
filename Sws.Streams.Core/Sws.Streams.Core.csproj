@@ -89,12 +89,16 @@
     <Compile Include="Rewinding\PositionChangedEventHandler.cs" />
     <Compile Include="Rewinding\RewindableBuilder.cs" />
     <Compile Include="Common\CurrentDateTimeSource.cs" />
+    <Compile Include="Rolling\Internal\BlockForCapacityWriteStream.cs" />
+    <Compile Include="Rolling\Internal\BlockingWriteRollingMemory.cs" />
     <Compile Include="Rolling\Internal\CompletedReadStreamHandler.cs" />
+    <Compile Include="Rolling\Internal\CompositeRollingMemoryStateMonitor.cs" />
     <Compile Include="Rolling\Internal\DataSourceDisposerRegister.cs" />
     <Compile Include="Rolling\Internal\ICompletedWriteStreamSource.cs" />
     <Compile Include="Rolling\Internal\IActiveWriteStreamSource.cs" />
     <Compile Include="Rolling\Internal\IDataSourceDisposerRegister.cs" />
     <Compile Include="Rolling\Internal\IReadStreamQueueRefresher.cs" />
+    <Compile Include="Rolling\Internal\LagCountingRollingMemoryStateMonitor.cs" />
     <Compile Include="Rolling\Internal\ReadStreamDefinition.cs" />
     <Compile Include="Rolling\Internal\RollingMemory.cs" />
     <Compile Include="Common\ICurrentDateTimeSource.cs" />
