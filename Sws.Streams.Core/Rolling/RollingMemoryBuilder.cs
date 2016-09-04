@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Sws.Streams.Core.Rolling.MemoryStreamBased;
 using Sws.Streams.Core.Rolling.Internal;
 using Sws.Streams.Core.Common;
@@ -43,6 +40,10 @@ namespace Sws.Streams.Core.Rolling
         private long? _maximumAllowedUnavailableBytes = 0;
 
         public long? MaximumAllowedUnavailableBytes { get { return _maximumAllowedUnavailableBytes; } }
+
+        private long? _blockWritesAboveLagBytes = null;
+
+        public long? BlockWritesAboveLagBytes { get { return _blockWritesAboveLagBytes; } }
 
         private IRollingMemoryStateMonitor _rollingMemoryStateMonitor = null;
 
@@ -129,6 +130,25 @@ namespace Sws.Streams.Core.Rolling
         }
 
         /// <summary>
+        /// Blocks writes when the write position is beyond this amount ahead of the read
+        /// position. This can be used to create backpressure, but it should be used very carefully!
+        /// Reads and Writes must always take place on separate threads to avoid deadlocks.
+        /// If this value is set, MaximumAllowedUnavailableAge must also be set, or
+        /// MaximumAllowedUnavailableBytes must be set to a value less than this one.
+        /// This is because otherwise it is possible for the amount of data unavailable
+        /// for reading to become permanently greater than the maximum allowed lag, creating
+        /// another deadlock situation.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public RollingMemoryBuilder SetBlockWritesAboveLagBytes(long? value)
+        {
+            _blockWritesAboveLagBytes = value;
+
+            return this;
+        }
+
+        /// <summary>
         /// Sets the maximum amount of data that can have been written to the WriteStream without being available on the ReadStream.
         /// In other words, this guarantees that no more than this number of bytes will be unavailable for reading.  A null
         /// value indicates no maximum.  The default is zero, which means that all data is immediately available for reading;
@@ -204,18 +224,35 @@ namespace Sws.Streams.Core.Rolling
 
         public IRollingMemory Build()
         {
+            if (!BlockWritesAboveLagBytes.HasValue)
+            {
+                return BuildCoreRollingMemory(RollingMemoryStateMonitor);
+            }
+            else
+            {
+                if ((!MaximumAllowedUnavailableAge.HasValue) &&
+                    MaximumAllowedUnavailableBytes.GetValueOrDefault(BlockWritesAboveLagBytes.Value + 1) >= BlockWritesAboveLagBytes.Value)
+                {
+                    throw new ArgumentException("If BlockWritesAboveLagBytes is specified, either MaximumAllowedUnavailableAge must be set, or MaximumAllowedUnavailableBytes must be lower than BlockWritesAboveLagBytes. This is to prevent the rolling memory entering a state where the amount of data which is unavailable for reading is greater than or equal to the allowed lag.");
+                }
+
+                return new BlockingWriteRollingMemory(BuildCoreRollingMemory, RollingMemoryStateMonitor, BlockWritesAboveLagBytes.Value);
+            }
+        }
+
+        private IRollingMemory BuildCoreRollingMemory(IRollingMemoryStateMonitor rollingMemoryStateMonitor)
+        {
             return new RollingMemory(
                 WriteStreamFactory,
                 WriteStreamToReadStreamConverter,
                 WriteStreamDataSourceDisposerFactory,
                 ReadStreamDataSourceDisposerFactory,
-                RollingMemoryStateMonitor,
+                rollingMemoryStateMonitor,
                 MaximumAllowedWriteStreamBytes,
                 MaximumAllowedUnavailableAge,
                 MaximumAllowedUnavailableBytes,
                 CurrentDateTimeSource
             );
         }
-
     }
 }
