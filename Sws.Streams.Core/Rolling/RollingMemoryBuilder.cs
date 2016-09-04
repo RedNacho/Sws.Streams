@@ -133,10 +133,9 @@ namespace Sws.Streams.Core.Rolling
         /// Blocks writes when the write position is beyond this amount ahead of the read
         /// position. This can be used to create backpressure, but it should be used very carefully!
         /// Reads and Writes must always take place on separate threads to avoid deadlocks.
-        /// If this value is set, MaximumAllowedUnavailableAge must also be set, or
-        /// MaximumAllowedUnavailableBytes must be set to a value less than this one.
-        /// This is because otherwise it is possible for the amount of data unavailable
-        /// for reading to become permanently greater than the maximum allowed lag, creating
+        /// If this value is set, MaximumAllowedUnavailableBytes must be set to a value less than
+        /// this one. This is because otherwise it is possible for the amount of data unavailable
+        /// for reading to become greater than the maximum allowed lag, creating
         /// another deadlock situation.
         /// </summary>
         /// <param name="value"></param>
@@ -228,10 +227,9 @@ namespace Sws.Streams.Core.Rolling
 
             if (BlockWritesAboveLagBytes.HasValue)
             {
-                if ((!MaximumAllowedUnavailableAge.HasValue) &&
-                    MaximumAllowedUnavailableBytes.GetValueOrDefault(BlockWritesAboveLagBytes.Value + 1) >= BlockWritesAboveLagBytes.Value)
+                if (MaximumAllowedUnavailableBytes.GetValueOrDefault(BlockWritesAboveLagBytes.Value + 1) >= BlockWritesAboveLagBytes.Value)
                 {
-                    throw new ArgumentException("If BlockWritesAboveLagBytes is specified, either MaximumAllowedUnavailableAge must be set, or MaximumAllowedUnavailableBytes must be lower than BlockWritesAboveLagBytes. This is to prevent the rolling memory entering a state where the amount of data which is unavailable for reading is greater than or equal to the allowed lag.");
+                    throw new ArgumentException("If BlockWritesAboveLagBytes is specified, MaximumAllowedUnavailableBytes must be lower than BlockWritesAboveLagBytes. This is to prevent the rolling memory entering a state where the amount of data which is unavailable for reading is greater than or equal to the allowed lag.");
                 }
 
                 var innerRollingMemoryBuildFunction = rollingMemoryBuildFunction;
