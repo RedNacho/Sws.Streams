@@ -224,11 +224,9 @@ namespace Sws.Streams.Core.Rolling
 
         public IRollingMemory Build()
         {
-            if (!BlockWritesAboveLagBytes.HasValue)
-            {
-                return BuildCoreRollingMemory(RollingMemoryStateMonitor);
-            }
-            else
+            Func<IRollingMemoryStateMonitor, IRollingMemory> rollingMemoryBuildFunction = BuildCoreRollingMemory;
+
+            if (BlockWritesAboveLagBytes.HasValue)
             {
                 if ((!MaximumAllowedUnavailableAge.HasValue) &&
                     MaximumAllowedUnavailableBytes.GetValueOrDefault(BlockWritesAboveLagBytes.Value + 1) >= BlockWritesAboveLagBytes.Value)
@@ -236,8 +234,12 @@ namespace Sws.Streams.Core.Rolling
                     throw new ArgumentException("If BlockWritesAboveLagBytes is specified, either MaximumAllowedUnavailableAge must be set, or MaximumAllowedUnavailableBytes must be lower than BlockWritesAboveLagBytes. This is to prevent the rolling memory entering a state where the amount of data which is unavailable for reading is greater than or equal to the allowed lag.");
                 }
 
-                return new BlockingWriteRollingMemory(BuildCoreRollingMemory, RollingMemoryStateMonitor, BlockWritesAboveLagBytes.Value);
+                var innerRollingMemoryBuildFunction = rollingMemoryBuildFunction;
+
+                rollingMemoryBuildFunction = rollingMemoryStateMonitor => new BlockingWriteRollingMemory(innerRollingMemoryBuildFunction, rollingMemoryStateMonitor, BlockWritesAboveLagBytes.Value);
             }
+
+            return rollingMemoryBuildFunction(RollingMemoryStateMonitor);
         }
 
         private IRollingMemory BuildCoreRollingMemory(IRollingMemoryStateMonitor rollingMemoryStateMonitor)
