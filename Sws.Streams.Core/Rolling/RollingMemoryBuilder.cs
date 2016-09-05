@@ -227,7 +227,7 @@ namespace Sws.Streams.Core.Rolling
 
             if (BlockWritesAboveLagBytes.HasValue)
             {
-                if (MaximumAllowedUnavailableBytes.GetValueOrDefault(BlockWritesAboveLagBytes.Value + 1) >= BlockWritesAboveLagBytes.Value)
+                if ((!MaximumAllowedUnavailableBytes.HasValue) || MaximumAllowedUnavailableBytes.Value >= BlockWritesAboveLagBytes.Value)
                 {
                     throw new ArgumentException("If BlockWritesAboveLagBytes is specified, MaximumAllowedUnavailableBytes must be lower than BlockWritesAboveLagBytes. This is to prevent the rolling memory entering a state where the amount of data which is unavailable for reading is greater than or equal to the allowed lag.");
                 }
