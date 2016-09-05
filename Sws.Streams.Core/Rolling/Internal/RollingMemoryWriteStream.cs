@@ -93,7 +93,7 @@ namespace Sws.Streams.Core.Rolling.Internal
 
         public override void Flush()
         {
-            SwitchTarget(false);
+            SwitchTargetIfDataWritten(false);
         }
 
         public override void Write(byte[] buffer, int offset, int count)
@@ -201,7 +201,12 @@ namespace Sws.Streams.Core.Rolling.Internal
             return output;
         }
 
-        private void SwitchTarget(bool targetLocked)
+        private void SwitchTargetIfDataWritten(bool targetLocked)
+        {
+            SwitchTarget(targetLocked, true);
+        }
+
+        private void SwitchTarget(bool targetLocked, bool onlySwitchIfDataWritten = false)
         {
             if (!targetLocked)
             {
@@ -212,6 +217,10 @@ namespace Sws.Streams.Core.Rolling.Internal
             }
             else
             {
+                if (onlySwitchIfDataWritten && TargetBytesWritten == 0)
+                {
+                    return;
+                }
 
                 if (CurrentTarget != null)
                 {
