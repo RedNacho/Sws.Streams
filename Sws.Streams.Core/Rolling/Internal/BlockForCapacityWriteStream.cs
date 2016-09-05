@@ -44,8 +44,7 @@ namespace Sws.Streams.Core.Rolling.Internal
                         offset += toWrite;
                         count -= toWrite;
                     }
-
-                    if (count > 0)
+                    else if (count > 0)
                     {
                         _waitForCapacityChange();
                     }
